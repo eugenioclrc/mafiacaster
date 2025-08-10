@@ -17,17 +17,17 @@ import { parseEventLogs } from 'viem'
   let selectedMission = $state(null);
 
  async function doJob() {
-	/*
-	if(PUBLIC_DEVMODE) {
-		// local host and metamask for development
-	await window.ethereum // Or window.ethereum if you don't support EIP-6963.
-    .request({
-      method: "wallet_switchEthereumChain",
-      params: [{ chainId: '0x7a69' /* anvil.id * / }],
-    })
 
-}
-*/
+  working = true;
+  selectedMission = null;
+
+  if(!$isWalletReady) {
+	  alert("Please connect your wallet first");
+	  return;
+  }
+
+
+
 const hash = await writeContract(getConfig(), {
   to: '0xC9aE8dA750AC66c686a748CBBdECd851abAc9362',
     chainId: baseSepolia.id, 

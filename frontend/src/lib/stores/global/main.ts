@@ -23,6 +23,7 @@ export async function loadUserData() {
 
   [_lastEnergyClaimed, _energy] = await readContract(get(frameWalletConfig), {
     address: "0xC9aE8dA750AC66c686a748CBBdECd851abAc9362",
+    chainId: baseSepolia.id, 
     functionName: "users",
     abi: [
       {
@@ -56,4 +57,10 @@ export async function loadUserData() {
   console.log(_energy, _lastEnergyClaimed);
   userEnergy.set(_energy);
   userLastEnergyClaimed.set(_lastEnergyClaimed);
+  if(_energy == 0n && _lastEnergyClaimed == 0n) {
+    // User has no energy and has never claimed energy
+    userEnergy.set(20n);
+    userLastEnergyClaimed.set(BigInt(Date.now()));
+  }
+
 }
