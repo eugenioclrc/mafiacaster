@@ -23,7 +23,7 @@ export async function loadUserData() {
   let _lastEnergyClaimed = 0n;
 
   [_lastEnergyClaimed, _energy] = await readContract(get(frameWalletConfig), {
-    address: "0xC9aE8dA750AC66c686a748CBBdECd851abAc9362",
+    address: "0x854723c2ebC1ea2111cEDF2Fa4C95794ca747d18",
     chainId: baseSepolia.id, 
     functionName: "users",
     abi: [
