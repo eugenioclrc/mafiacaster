@@ -43,7 +43,8 @@ contract MafiaCaster is Ownable {
     IPool public pool;
     WETH9 public weth;
     IRewardsController public rewardsController;
-    
+    address theGoodFather;
+
     Items public items;
     Money public money;
     uint256 public investTime = 30 days;
@@ -55,7 +56,13 @@ contract MafiaCaster is Ownable {
 
     mapping(address => User) public users;
 
-    constructor (WETH9 _weth, IPool _pool, IRewardsController _rewardsController) Ownable(msg.sender) {
+    modifier onlyTheGoodFather() {
+        require(msg.sender == theGoodFather || msg.sender == owner(), "Not the goodFather");
+        _;
+    }
+
+    constructor (address _theGoodFather, WETH9 _weth, IPool _pool, IRewardsController _rewardsController) Ownable(msg.sender) {
+        theGoodFather = _theGoodFather;
         items = new Items(msg.sender);
         money = new Money(msg.sender);
         pool = _pool;
@@ -86,37 +93,49 @@ contract MafiaCaster is Ownable {
         amount = invest.amount;
     }
 
-    function addMission(Mission calldata mission) external onlyOwner returns(uint256 id) {
+    function addMission(Mission calldata mission) external onlyTheGoodFather returns(uint256 id) {
         require(mission.winOdds <= MAX_ODDS, 'To odd');
         id = counterId++;
         missions[id] = mission;
     }
 
-    function toggleMissionEnable(uint256 id) external onlyOwner {
+    function toggleMissionEnable(uint256 id) external onlyTheGoodFather {
         require(id < counterId && id != 0, 'The mission don\'t exists');
         missions[id].enable = !missions[id].enable;
     }
 
-    function setFeePerEnergy(uint256 _feePerEnergy) external onlyOwner {
+    function setTheGoodFather(address _theGoodFather) external onlyTheGoodFather {
+        theGoodFather = _theGoodFather;
+    }
+
+    function setFeePerEnergy(uint256 _feePerEnergy) external onlyTheGoodFather {
         feePerEnergy = _feePerEnergy;
     }
 
-    function setTimePerEnergy(uint256 _timePerEnergy) external onlyOwner {
+    function setTimePerEnergy(uint256 _timePerEnergy) external onlyTheGoodFather {
         timePerEnergy = _timePerEnergy;
     }
 
-    function setInvestTime(uint256 _investTime) external onlyOwner {
+    function setInvestTime(uint256 _investTime) external onlyTheGoodFather {
         investTime = _investTime;
     }
 
-    function claimProtocolRewards() external onlyOwner {
+    function claimProtocolRewards() external onlyTheGoodFather {
         address[] memory assets = new address[](1);
         assets[0] = address(weth); 
         rewardsController.claimAllRewardsToSelf(assets);
     }
 
+    function doMission(uint256 id, address soldier) external onlyTheGoodFather {
+        _doMission(id, soldier);
+    }
+
     function doMission(uint256 id) external {
-        if (users[msg.sender].lastEnergyClaimed == 0) {
+        _doMission(id, msg.sender);
+    }
+
+    function _doMission(uint256 id, address soldier) internal {
+        if (users[soldier].lastEnergyClaimed == 0) {
             claimEnergy();
         }
 
@@ -124,21 +143,21 @@ contract MafiaCaster is Ownable {
         require(mission.enable, 'Not enable');
 
         if (mission.reqAmount != 0) {
-            money.burn(msg.sender, mission.reqAmount);
+            money.burn(soldier, mission.reqAmount);
         }
         if (mission.reqIds1155.length != 0) {
-            items.burnBatch(msg.sender, mission.reqIds1155, mission.reqAmounts1155);
+            items.burnBatch(soldier, mission.reqIds1155, mission.reqAmounts1155);
         }
 
-        users[msg.sender].energy -= mission.energyConsume;
+        users[soldier].energy -= mission.energyConsume;
 
         bool hasWon = _hasWon(mission.winOdds);
         if (hasWon) {
             if (mission.rewAmount != 0) {
-                money.mint(msg.sender, mission.rewAmount);
+                money.mint(soldier, mission.rewAmount);
             }
             if (mission.rewIds1155.length != 0) {
-                items.mintBatch(msg.sender, mission.rewIds1155, mission.rewAmounts1155);
+                items.mintBatch(soldier, mission.rewIds1155, mission.rewAmounts1155);
             }
         }
 

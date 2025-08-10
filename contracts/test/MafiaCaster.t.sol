@@ -15,12 +15,13 @@ contract Test_MafiaCaster is Test {
     MockPool pool = new MockPool();
     MockRewardsController rewardsController = new MockRewardsController();
     MafiaCaster mafia;
-    address owner = address(0x1000000000000000000000000000000000000001);
-    address player = address(0x2000000000000000000000000000000000000002);
+    address owner = 0x1000000000000000000000000000000000000001;
+    address theGoodFather = 0x2000000000000000000000000000000000000002;
+    address player = 0x3000000000000000000000000000000000000003;
     
     function setUp() public {
         vm.prank(owner);
-        mafia = new MafiaCaster(WETH9(weth), IPool(pool), IRewardsController(rewardsController));
+        mafia = new MafiaCaster(theGoodFather, WETH9(weth), IPool(pool), IRewardsController(rewardsController));
     }
 
     function test_constructor() public {

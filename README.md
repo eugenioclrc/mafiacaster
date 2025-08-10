@@ -6,21 +6,27 @@
 
 ## Deploys
 
-- MafiaCaster: [0xDbc3Fa5DBD281BD00A8f5a770B05d963bb9565aA](https://sepolia.basescan.org/address/0xdbc3fa5dbd281bd00a8f5a770b05d963bb9565aa#code)
-- Money: [0x156230e2c7Fb1901b6A7C6F04C3997Ba59f3D924](https://sepolia.basescan.org/address/0x156230e2c7Fb1901b6A7C6F04C3997Ba59f3D924#code)
-- Items: [0xf914548D078446F514BBd33c067A5f7e99FaE5a2](https://sepolia.basescan.org/address/0xf914548D078446F514BBd33c067A5f7e99FaE5a2#code)
+- MafiaCaster: [0xc9ae8da750ac66c686a748cbbdecd851abac9362](https://sepolia.basescan.org/address/0xc9ae8da750ac66c686a748cbbdecd851abac9362#code)
+- Money: [0xdAB47FF5dd2177A0A6625aBa974316C5D42c8AD1](https://sepolia.basescan.org/address/0xdAB47FF5dd2177A0A6625aBa974316C5D42c8AD1#code)
+- Items: [0xC380a99D7a4764E1b7b7f389488987853Ce221cc](https://sepolia.basescan.org/address/0xC380a99D7a4764E1b7b7f389488987853Ce221cc#code)
 
 ### Mission TXs
 
-- Mission 1, loss: [0x4e67...8bb0](https://sepolia.basescan.org/tx/0x4e673dda5e2917af3bd9d63f6f09bde660841b4bee7846e30fd96b34c0f88bb0#eventlog)
+- Mission 1, loss: [0xad891b97b7edb25a59c8636231454087f94d2bdf4ed15fe02a498109abe8e6be](https://sepolia.basescan.org/tx/0xad891b97b7edb25a59c8636231454087f94d2bdf4ed15fe02a498109abe8e6be#eventlog)
 
-- Mission 1, win money: [0xf9cd...fa0da](https://sepolia.basescan.org/tx/0xf9cd891701ad2af9fcd980208bf1b534ccac5d0cd1331e6ea6d41c99c1bfa0da#eventlog)
+- Mission 1, win[money]: [0xa8ccdb556d6f630a1569b4a3dcf992a45a250938e1a616514dc204481f75a3d4](https://sepolia.basescan.org/tx/0xa8ccdb556d6f630a1569b4a3dcf992a45a250938e1a616514dc204481f75a3d4)
 
-- Mission 1, win money: [0x60b1...18dc](https://sepolia.basescan.org/tx/0x60b1e76aebf6ab577f52d8c3e74dc9132afaefbff9f3442e8a28fcb0519818dc#eventlog)
+- Mission 1, win[money]: [0xbe4c73133a5160b9e3ca3e3a5c1ace10b54aabfc61c17a2fa0abb81752e33260](https://sepolia.basescan.org/tx/0xbe4c73133a5160b9e3ca3e3a5c1ace10b54aabfc61c17a2fa0abb81752e33260)
 
-- Mission 2, win money item 1 amount 2: [0x49f4...e3db](https://sepolia.basescan.org/tx/0x49f4f02945e7f606d810d8ea17d39614d46123be64f6397c8eb23b2030eae3db#eventlog)
+- Mission 2, loss[money]: [0x3b9c9525eab2a2fac8b9f611a805a5bc6aed5c21033b98692d9`617f9bacf6367](https://sepolia.basescan.org/tx/0x3b9c9525eab2a2fac8b9f611a805a5bc6aed5c21033b98692d9`617f9bacf6367)
 
-- Mission 3, loss: [0x6dd5...07e4](https://sepolia.basescan.org/tx/0x6dd55ef5e7decd35078281371a052700db7aa61c7d94d844d0917a64ab5807e4#eventlog)
+- Mission 2, loss[money]: [0xe3dc8fd96855162fda2bba9fc33ee0fb51630b11e722d9c7097085a729dc018b](https://sepolia.basescan.org/tx/0xe3dc8fd96855162fda2bba9fc33ee0fb51630b11e722d9c7097085a729dc018b)
+
+- Mission 2, win[money, item 1 amount 1]: [0x2b977e15bd89b07b3c71d368c6058fd0ca48c71381a92cad7d26180cfec933e8](https://sepolia.basescan.org/tx/0x2b977e15bd89b07b3c71d368c6058fd0ca48c71381a92cad7d26180cfec933e8)
+
+- Mission 3, loss[money, item 1 amount 1]: [0x1073c0f1f7b8a0a1d0823faba8be7f20005e14245b0fa805d849753d72f7e076](https://sepolia.basescan.org/tx/0x1073c0f1f7b8a0a1d0823faba8be7f20005e14245b0fa805d849753d72f7e076)
+
+- Mission 3, win[money, item 2 amount 3, item 1 amount 5]: [0x74c0e27a33d88d7a2035f3e84619f54dae455e233765fd56092790e899fc2b76](https://sepolia.basescan.org/tx/0x74c0e27a33d88d7a2035f3e84619f54dae455e233765fd56092790e899fc2b76)
 
 ## Features
 
