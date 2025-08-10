@@ -5,6 +5,8 @@ import {Ownable} from "openzeppelin-contracts/contracts/access/Ownable.sol";
 
 import {IERC20} from "openzeppelin-contracts/contracts/token/ERC20/IERC20.sol";
 import {SafeERC20} from "openzeppelin-contracts/contracts/token/ERC20/utils/SafeERC20.sol";
+import {IPool} from "./interfaces/IPool.sol";
+import {IRewardsController} from "./interfaces/IRewardsController.sol";
 import {Items} from "./Items.sol";
 import {Money} from "./Money.sol";
 
@@ -40,6 +42,9 @@ contract MafiaCaster is Ownable {
     uint256 constant MAX_ODDS = 1 ether;
 
     IERC20 public USDbC;
+    IPool public pool;
+    IRewardsController public rewardsController;
+    
     Items public items;
     Money public money;
     uint256 public investTime = 30 days;
@@ -51,10 +56,13 @@ contract MafiaCaster is Ownable {
 
     mapping(address => User) public users;
 
-    constructor (IERC20 _USDbC) Ownable(msg.sender) {
+    constructor (IERC20 _USDbC, IPool _pool, IRewardsController _rewardsController) Ownable(msg.sender) {
         items = new Items(msg.sender);
         money = new Money(msg.sender);
         USDbC = _USDbC;
+        pool = _pool;
+        rewardsController = _rewardsController;
+        _USDbC.forceApprove(address(_pool), type(uint256).max);
     }
 
     function getMissionReqIds1155(uint256 id) external view returns(uint256[] memory) {
@@ -102,6 +110,12 @@ contract MafiaCaster is Ownable {
         investTime = _investTime;
     }
 
+    function claimProtocolRewards() external onlyOwner {
+        address[] memory assets = new address[](1);
+        assets[0] = address(USDbC); 
+        rewardsController.claimAllRewardsToSelf(assets);
+    }
+
     function doMission(uint256 id) external {
         Mission memory mission = missions[id];
         require(mission.enable, 'Not enable');
@@ -123,7 +137,6 @@ contract MafiaCaster is Ownable {
                 items.mintBatch(msg.sender, mission.rewIds1155, mission.rewAmounts1155);
             }
         }
-
     }
 
     function claimEnergy() external {
@@ -156,7 +169,7 @@ contract MafiaCaster is Ownable {
         }));
         users[msg.sender].energy += amount;
 
-        _invest(USDbCAmount);
+        _supplyAave(USDbCAmount);
     }
 
     function returnFunds(uint256 investId) external {
@@ -164,14 +177,22 @@ contract MafiaCaster is Ownable {
         require(invest.amount > 0, "Already returned");
         require(invest.endTime >= block.timestamp, "Not yet");
 
+        _withdrawAave(invest.amount);
 
-
-        USDbC.safeTransferFrom(address(this), msg.sender, invest.amount);  
+        USDbC.safeTransfer(msg.sender, invest.amount);  
         users[msg.sender].invests[investId].amount = 0;
     }
 
-    function _invest(uint256 amount) internal {
-        // meter en aave
+    function _supplyAave(uint256 USDbCAmount) internal {
+        if (address(pool) != address(0)) {
+            pool.supply(address(USDbC), USDbCAmount, address(this), 0);
+        }
+    }
+
+    function _withdrawAave(uint256 USDbCAmount) internal {
+        if (address(pool) != address(0)) {
+            pool.withdraw(address(USDbC), USDbCAmount, address(this));
+        }
     }
 
     function _hasWon(uint256 odds) internal view returns (bool) {
