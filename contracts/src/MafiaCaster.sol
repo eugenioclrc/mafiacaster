@@ -117,6 +117,10 @@ contract MafiaCaster is Ownable {
     }
 
     function doMission(uint256 id) external {
+        if (users[msg.sender].lastEnergyClaimed == 0) {
+            claimEnergy();
+        }
+
         Mission memory mission = missions[id];
         require(mission.enable, 'Not enable');
 
@@ -139,7 +143,7 @@ contract MafiaCaster is Ownable {
         }
     }
 
-    function claimEnergy() external {
+    function claimEnergy() public {
         uint256 energy;
         if (users[msg.sender].lastEnergyClaimed == 0) {
             energy = 100;
