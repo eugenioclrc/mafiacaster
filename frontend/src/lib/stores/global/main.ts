@@ -17,13 +17,13 @@ export const userEnergy = writable<bigint>(0n);
 export const userLastEnergyClaimed = writable<bigint>(0n);
 
 export async function loadUserData() {
-  if (!get(isWalletReady)) return;
+  if (!get(isWalletReady)||!get(frameWalletConfig)) return;
   const user = get(userWallet);
   let _energy = 100n;
   let _lastEnergyClaimed = 0n;
 
   [_lastEnergyClaimed, _energy] = await readContract(get(frameWalletConfig), {
-    address: "0x854723c2ebC1ea2111cEDF2Fa4C95794ca747d18",
+    address: "0xC9aE8dA750AC66c686a748CBBdECd851abAc9362",
     chainId: baseSepolia.id, 
     functionName: "users",
     abi: [

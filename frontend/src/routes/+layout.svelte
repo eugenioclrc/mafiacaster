@@ -22,6 +22,7 @@
 	} from '@wagmi/core';
 	import { baseAccount, coinbaseWallet, metaMask, injected } from 'wagmi/connectors';
 	import { farcasterMiniApp as miniAppConnector } from '@farcaster/miniapp-wagmi-connector';
+  import { baseSepolia } from 'viem/chains';
 
 	const ogImage = `${config.resolvedBaseUrl}/logo.png`;
 	const pageUrl = SveltePage.url.href.replace('http:', 'https:');
@@ -89,16 +90,16 @@
 
 	async function doConnect(connectionType: string) {
 		if (connectionType == 'farcaster') {
-			const result = await connect($frameWalletConfig, { connector: miniAppConnector() });
+			const result = await connect($frameWalletConfig, { connector: miniAppConnector(), chainId: baseSepolia.id });
 		} else if(connectionType == 'baseWallet') {
-			const result = await connect($frameWalletConfig, { connector: baseAccount() });
+			const result = await connect($frameWalletConfig, { connector: baseAccount(), chainId: baseSepolia.id });
 		} else if(connectionType == 'baseCDP') {
-			const result = await connect($frameWalletConfig, { connector: coinbaseWallet() });
+			const result = await connect($frameWalletConfig, { connector: coinbaseWallet(), chainId: baseSepolia.id });
 		} else if(connectionType == 'injected') {
 			try {
-				await connect($frameWalletConfig, { connector: injected() });
+				await connect($frameWalletConfig, { connector: injected(), chainId: baseSepolia.id});
 			} catch(error) {
-				await connect($frameWalletConfig, { connector: metaMask() });
+				await connect($frameWalletConfig, { connector: metaMask(), chainId: baseSepolia.id });
 			}
 		}
 
