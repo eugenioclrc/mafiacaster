@@ -1,5 +1,9 @@
 # MafiaCaster
 
+<p align="center">
+  <img src="./logo.png" alt="MafiaCaster" width="600">
+</p>
+
 # Contracts
 
 `MafiaCaster` is a game that allows users to participate in missions using an energy system, ERC20 and ERC1155 tokens. Users can claim or purchase energy, complete missions that consume resources and grant rewards, and invest funds that are deposited into an Aave-like pool to generate yield. After a fixed period, the invested funds can be withdrawn by the users. The rewards earned from the Aave protocol are used to fund the platform itself. The contract provides administrative functions for managing missions and claiming
