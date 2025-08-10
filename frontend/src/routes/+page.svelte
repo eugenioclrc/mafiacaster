@@ -29,7 +29,7 @@ import { parseEventLogs } from 'viem'
 
 
 const hash = await writeContract(getConfig(), {
-  to: '0x854723c2ebC1ea2111cEDF2Fa4C95794ca747d18',
+  to: '0xC9aE8dA750AC66c686a748CBBdECd851abAc9362',
     chainId: baseSepolia.id, 
 	abi: gameAbi,
 	functionName: 'doMission',
