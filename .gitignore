@@ -1,1 +1,9 @@
+<<<<<<< HEAD
 /contracts/lib/
+=======
+/frontend/.svelte-kit/
+/.turbo/
+/frontend/node_modules/
+/node_modules/
+.env
+>>>>>>> refs/remotes/origin/main
