@@ -1,8 +1,10 @@
 {
+  "globalDependencies": [".env"],
   "$schema": "https://turborepo.org/schema.json",
   "tasks": {
     "build": {
-      "outputs": ["dist/**", ".svelte-kit/**"]
+      "outputs": ["dist/**", ".svelte-kit/**"],
+      "inputs": ["$TURBO_DEFAULT$", ".env*"]
     },
     "dev": {
       "cache": false,
