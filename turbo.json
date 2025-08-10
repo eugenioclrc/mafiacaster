@@ -1,6 +1,7 @@
 {
-  "globalDependencies": [".env"],
   "$schema": "https://turborepo.org/schema.json",
+  "globalDependencies": [".env*"],
+  "globalEnv": ["CDP_API_KEY_ID", "CDP_API_KEY_SECRET", "CDP_WALLET_SECRET", "PUBLIC_DEVMODE"],
   "tasks": {
     "build": {
       "outputs": ["dist/**", ".svelte-kit/**"],
