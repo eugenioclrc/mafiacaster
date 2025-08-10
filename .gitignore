@@ -6,3 +6,4 @@
 .env
 /out/
 /cache/solidity-files-cache.json
+/cache/
