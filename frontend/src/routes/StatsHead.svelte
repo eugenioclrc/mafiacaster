@@ -3,7 +3,8 @@
 		hp: {},
 		energy: {}
 	};
-	import { userWallet ,frameWalletConfig, isWalletReady } from '$lib/stores/global/main';
+
+	import { userWallet ,frameWalletConfig, isWalletReady, userEnergy} from '$lib/stores/global/main';
 
 	import { disconnect } from 'wagmi/actions';
 
@@ -61,7 +62,7 @@
 				<span class="text-red-500">❤</span>{profile.hp.current}/{profile.hp.max}
 			</div>
 			<div class="flex items-center gap-1 text-yellow-400">
-				⚡{profile.energy.current}/{profile.energy.max}
+				⚡{$userEnergy}/100
 			</div>
 			<div class="flex items-center gap-1 text-green-400">💵${profile.cash}k</div>
 		</div>

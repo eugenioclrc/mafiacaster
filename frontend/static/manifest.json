@@ -1,21 +1,21 @@
 {
-	"name": "Farcaster MiniApp Starter Kit",
-	"short_name": "MiniCaster",
-	"description": "A modern starter kit for building Farcaster MiniApps with SvelteKit, featuring authentication, casting, and frame integration",
-	"icons": [
-		{
-			"src": "/favicon.svg",
-			"type": "image/svg+xml",
-			"sizes": "any"
-		}
-	],
-	"background_color": "#35303f",
-	"orientation": "portrait",
-	"display": "standalone",
-	"scope": "/",
-	"theme_color": "#35303f",
-	"start_url": "/",
-	"categories": ["social", "productivity", "utilities"],
-	"lang": "en",
-	"dir": "ltr"
-} 
+  "name": "Farcaster MiniApp Starter Kit",
+  "short_name": "MiniCaster",
+  "description": "A modern starter kit for building Farcaster MiniApps with SvelteKit, featuring authentication, casting, and frame integration",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any"
+    }
+  ],
+  "background_color": "#35303f",
+  "orientation": "portrait",
+  "display": "standalone",
+  "scope": "/",
+  "theme_color": "#35303f",
+  "start_url": "/",
+  "categories": ["social", "productivity", "utilities"],
+  "lang": "en",
+  "dir": "ltr"
+}

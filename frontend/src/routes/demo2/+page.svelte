@@ -1,17 +1,62 @@
 <script lang="ts">
 	import StatsHead from '../StatsHead.svelte';
-
+import gameAbi from '$lib/abi/game.json';
   	import { getConfig } from '$lib/frames/global/farcaster-wallet';
+import { isWalletReady,frameWalletConfig , userWallet} from '$lib/stores/global/main';
+  import {waitForTransactionReceipt, writeContract } from "@wagmi/core";
+  import { anvil } from 'viem/chains';
+  import { loadUserData } from '$lib/stores/global/main';
+  import { PUBLIC_DEVMODE } from '$env/static/public';
+import { parseEventLogs } from 'viem'
 
-  import {sendTransaction } from "@wagmi/core";
+
+  $effect(() => {
+	if ($isWalletReady) loadUserData();
+  });
+  
+  let working = $state(false);
+  let selectedMission = $state(null);
 
  async function doJob() {
-  
+	if(PUBLIC_DEVMODE) {
+		// local host and metamask for development
+	await window.ethereum // Or window.ethereum if you don't support EIP-6963.
+    .request({
+      method: "wallet_switchEthereumChain",
+      params: [{ chainId: '0x7a69' /* anvil.id */ }],
+    })
+}
 
-const result = await sendTransaction(getConfig(), {
-  to: '0xd2135CfB216b74109775236E36d4b433F1DF507B',
-  value: 100,
+const hash = await writeContract(getConfig(), {
+  to: '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512',
+    chainId: anvil.id, 
+	abi: gameAbi,
+	functionName: 'doMission',
+  args: [1n],
+});
+console.log(hash);
+const transactionReceipt = await  waitForTransactionReceipt(getConfig(), {
+  hash,
 })
+
+loadUserData();
+
+  // ✅ Decodificar TODOS los logs que macheen con tu ABI
+  const decoded = parseEventLogs({
+    abi: gameAbi,
+    logs: transactionReceipt.logs,              // los logs crudos del receipt
+    // opcional: filtrar por address o por nombre de evento
+    // eventName: 'MissionDone',
+    // strict: false, // si querés que ignore logs que no machean (default)
+  })
+
+  if(decoded.filter((log) => log.eventName === 'DoMission')[0].args.hasWon) {
+	console.log("dad")
+	jobs[0].progress += 10;
+	jobs[0].progress = Math.min(jobs[0].progress, 100);
+	jobs = [...jobs];
+  };
+
  }
 
 	// --- Mock game state (replace with real data later) ---
@@ -37,14 +82,14 @@ const result = await sendTransaction(getConfig(), {
 
 	let activeCity = 'ny';
 
-	const jobs: Job[] = [
+	let jobs: Job[] = $state([
 		{
 			id: 'mug',
 			title: 'Mug someone',
 			city: 'ny',
 			requires: { energy: 1 },
 			rewards: { cash: 200, xp: 1 },
-			progress: 60
+			progress: 0
 		},
 		{
 			id: 'steal-car',
@@ -64,7 +109,7 @@ const result = await sendTransaction(getConfig(), {
 			progress: 0,
 			locked: true
 		}
-	];
+	]);
 
 	const cityJobs = (id: string) => jobs.filter((j) => j.city === id);
 </script>
@@ -143,7 +188,7 @@ const result = await sendTransaction(getConfig(), {
 				
 				<!-- blue notch -->
 				<div
-					class="absolute top-2.5 mt-0.5 h-8.5 ml-1 rounded w-[339px] bg-[#3b8ed8] shadow-[inset_0_0_3px_rgba(0,0,0,.6)]"
+					class="absolute top-2.5 mt-0.5 h-8.5 ml-1 rounded w-[39px] bg-[#3b8ed8] shadow-[inset_0_0_3px_rgba(0,0,0,.6)]"
 				></div>
 				<!-- pill text -->
 				<div
@@ -218,3 +263,22 @@ const result = await sendTransaction(getConfig(), {
 			</div>
 		{/each}
 	</div>
+
+
+
+
+<!-- Open the modal using ID.showModal() method -->
+<dialog id="modalJob" class="modal">
+  <div class="modal-box">
+    <h3 class="text-lg font-bold">Hello!</h3>
+    <p class="py-4">Your Connected wallet is {$userWallet}</p>
+    <div class="modal-action">
+      <form method="dialog">
+        <button class="btn btn-primary">Redo job</button>
+
+        <!-- if there is a button in form, it will close the modal -->
+        <button class="btn">Close modal</button>
+      </form>
+    </div>
+  </div>
+</dialog>
