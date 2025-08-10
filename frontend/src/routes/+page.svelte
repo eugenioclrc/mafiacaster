@@ -50,14 +50,17 @@ loadUserData();
     // strict: false, // si querés que ignore logs que no machean (default)
   })
 
-  if(decoded.filter((log) => log.eventName === 'DoMission')[0].args.hasWon) {
-	console.log("dad")
-	jobs[0].progress += 10;
-	jobs[0].progress = Math.min(jobs[0].progress, 100);
-	jobs = [...jobs];
-  };
-
- }
+  try {
+	if(decoded.filter((log) => log.eventName === 'DoMission')[0].args.hasWon) {
+		console.log("dad")
+		jobs[0].progress += 10;
+		jobs[0].progress = Math.min(jobs[0].progress, 100);
+		jobs = [...jobs];
+	};
+	} catch(e) {
+		console.log(decoded);
+		console.error("Error decoding event logs:", e);
+	}
 
 	// --- Mock game state (replace with real data later) ---
 	type Job = {

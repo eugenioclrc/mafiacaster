@@ -16,19 +16,19 @@ let _config: ReturnType<typeof createConfig> | null = null;
 
 export const getConfig = () => {
   if (_config != null) return _config;
-    _config = createConfig({
-      chains: [baseSepolia],
-      transports: {
-        [baseSepolia.id]: http(),
-      },
-      connectors: [
-        baseAccount(),
-        coinbaseWallet(),
-        miniAppConnector(),
-        injected(),
-        metaMask(),
-      ],
-    });
-  
+  _config = createConfig({
+    chains: [baseSepolia],
+    transports: {
+      [baseSepolia.id]: http(),
+    },
+    connectors: [
+      baseAccount(),
+      coinbaseWallet(),
+      miniAppConnector(),
+      injected(),
+      metaMask(),
+    ],
+  });
+
   return _config;
-}
+};

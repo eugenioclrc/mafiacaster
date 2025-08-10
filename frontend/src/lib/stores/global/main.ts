@@ -17,14 +17,14 @@ export const userEnergy = writable<bigint>(0n);
 export const userLastEnergyClaimed = writable<bigint>(0n);
 
 export async function loadUserData() {
-  if (!get(isWalletReady)||!get(frameWalletConfig)) return;
+  if (!get(isWalletReady) || !get(frameWalletConfig)) return;
   const user = get(userWallet);
   let _energy = 100n;
   let _lastEnergyClaimed = 0n;
 
   [_lastEnergyClaimed, _energy] = await readContract(get(frameWalletConfig), {
     address: "0xC9aE8dA750AC66c686a748CBBdECd851abAc9362",
-    chainId: baseSepolia.id, 
+    chainId: baseSepolia.id,
     functionName: "users",
     abi: [
       {
@@ -58,10 +58,9 @@ export async function loadUserData() {
   console.log(_energy, _lastEnergyClaimed);
   userEnergy.set(_energy);
   userLastEnergyClaimed.set(_lastEnergyClaimed);
-  if(_energy == 0n && _lastEnergyClaimed == 0n) {
+  if (_energy == 0n && _lastEnergyClaimed == 0n) {
     // User has no energy and has never claimed energy
     userEnergy.set(20n);
     userLastEnergyClaimed.set(BigInt(Date.now()));
   }
-
 }
