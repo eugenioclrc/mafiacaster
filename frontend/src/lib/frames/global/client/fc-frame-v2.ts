@@ -1,8 +1,8 @@
 export const generateURLFCFrameEmbed = ({
   featureImage = "",
   url,
-  buttonTitle = "Open App",
-  appName = "Demo Farcaster Mini Apps",
+  buttonTitle = "MafiaCaster",
+  appName = "MafiaCaster Mini Game",
 }: {
   featureImage?: string;
   url: string;
