@@ -9,7 +9,6 @@ import {
   injected,
   metaMask,
 } from "wagmi/connectors";
-import { PUBLIC_DEVMODE } from "$env/static/public";
 
 export const supportedChains = [baseSepolia.id];
 

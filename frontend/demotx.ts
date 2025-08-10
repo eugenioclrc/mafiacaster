@@ -2,7 +2,7 @@ import { CdpClient } from "@coinbase/cdp-sdk";
 import "dotenv/config";
 
 import { http, createPublicClient, parseEther } from "viem";
-import { baseSepolia, foundry } from "viem/chains";
+import { baseSepolia } from "viem/chains";
 import dotenv from "dotenv";
 
 dotenv.config();

@@ -2,6 +2,7 @@ import { writable, get } from "svelte/store";
 import type { WalletConfig } from "$lib/types/frame-sdk";
 
 import { sendTransaction, readContract } from "@wagmi/core";
+import { baseSepolia } from "wagmi/chains";
 
 export const pageLoading = writable(true);
 export const navigationLoading = writable(false);
