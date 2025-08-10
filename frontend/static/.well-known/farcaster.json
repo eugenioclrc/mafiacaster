@@ -7,11 +7,11 @@
   "miniapp": {
     "version": "1",
     "name": "MafiaCaster game Mini App",
-    "iconUrl": "https://farcaster-miniapp-sveltekit-starter.vercel.app/favicon.png",
-    "homeUrl": "https://farcaster-miniapp-sveltekit-starter.vercel.app/",
-    "imageUrl": "https://farcaster-miniapp-sveltekit-starter.vercel.app/logo.png",
+    "iconUrl": "https://mafiacaster-frontend.vercel.app/favicon.png",
+    "homeUrl": "https://mafiacaster-frontend.vercel.app/",
+    "imageUrl": "https://mafiacaster-frontend.vercel.app/logo.png",
     "buttonTitle": "Join the MafiaCaster",
-    "splashImageUrl": "https://farcaster-miniapp-sveltekit-starter.vercel.app/logo.png",
+    "splashImageUrl": "https://mafiacaster-frontend.vercel.app/logo.png",
     "splashBackgroundColor": "#35303f",
     "requiredChains": ["eip155:8453"],
     "requiredCapabilities": ["actions.signIn", "wallet.getEthereumProvider"]

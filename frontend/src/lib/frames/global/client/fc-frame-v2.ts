@@ -2,7 +2,7 @@ export const generateURLFCFrameEmbed = ({
   featureImage = "",
   url,
   buttonTitle = "MafiaCaster",
-  appName = "MafiaCaster Mini Game",
+  appName = "MafiaCaster Mini Gameg",
 }: {
   featureImage?: string;
   url: string;
@@ -47,7 +47,7 @@ export const generateURLFCFrameEmbed = ({
         // Image must be 200x200px and less than 1MB.
         // Example: "https://yoink.party/img/splash.png"
         splashImageUrl:
-          "https://farcaster-miniapp-sveltekit-starter.vercel.app/logo.png",
+          "https://mafiacaster-frontend.vercel.app/logo.png",
 
         // Hex color code.
         // Example: "#eeeee4"
