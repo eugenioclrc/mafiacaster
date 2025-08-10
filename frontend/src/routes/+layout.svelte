@@ -146,9 +146,10 @@
 
 		<button class="btn btn-primary" onclick={() => sdk.actions.addMiniApp()}>Add Mini App</button>
 		<button class="btn btn-primary my-2" onclick={() => doConnect('farcaster')}>Farcaster</button>
+		<button class="btn btn-primary my-2" onclick={() => doConnect('baseWallet')}>Base Wallet</button>
 	{:else}
 		<button class="btn btn-primary my-2" onclick={() => doConnect('baseWallet')}>Base Wallet</button>
-		<button class="btn btn-primary my-2" onclick={() => doConnect('baseCDP')}>Base CDP</button>
+		<!-- <button class="btn btn-primary my-2" onclick={() => doConnect('baseCDP')}>Base CDP</button> -->
 		<button class="btn btn-primary my-2" onclick={() => doConnect('injected')}>Metamsk</button>
 	{/if}
 </div>
