@@ -4,17 +4,23 @@ pragma solidity ^0.8.13;
 import {Test, console} from "forge-std/Test.sol";
 import {IERC20} from "openzeppelin-contracts/contracts/token/ERC20/IERC20.sol";
 import {MockUSDbC} from "../src/mocks/MockUSDbC.sol";
+import {IPool} from "../src/interfaces/IPool.sol";
+import {IRewardsController} from "../src/interfaces/IRewardsController.sol";
+import {MockPool} from "../src/mocks/MockPool.sol";
+import {MockRewardsController} from "../src/mocks/MockRewardsController.sol";
 import {MafiaCaster} from "../src/MafiaCaster.sol";
 
 contract Test_MafiaCaster is Test {
     MockUSDbC USDbC = new MockUSDbC();
+    MockPool pool = new MockPool();
+    MockRewardsController rewardsController = new MockRewardsController();
     MafiaCaster mafia;
     address owner = address(0x1000000000000000000000000000000000000001);
     address player = address(0x2000000000000000000000000000000000000002);
     
-    function setUp() public { 
+    function setUp() public {
         vm.prank(owner);
-        mafia = new MafiaCaster(IERC20(USDbC));
+        mafia = new MafiaCaster(IERC20(USDbC), IPool(pool), IRewardsController(rewardsController));
     }
 
     function test_constructor() public {
@@ -23,7 +29,6 @@ contract Test_MafiaCaster is Test {
         assertEq(mafia.money().owner(), owner);
         assertEq(mafia.feePerEnergy(), 1 ether);
         assertEq(mafia.timePerEnergy(), 10 minutes);
-        
     }
 
     function test_addMission() public {
@@ -209,11 +214,12 @@ contract Test_MafiaCaster is Test {
         uint256 id = mafia.addMission(mission);
         vm.startPrank(player);
         mafia.doMission(id);
-        USDbC.mint(player, 7 * mafia.feePerEnergy());
         
+        // buy 7
         (, uint256 energy) = mafia.users(player);
         assertEq(energy, 70);
         
+        USDbC.mint(player, 7 * mafia.feePerEnergy());
         USDbC.approve(address(mafia), 7 * mafia.feePerEnergy());
         mafia.buyEnergy(7);
         
@@ -222,16 +228,45 @@ contract Test_MafiaCaster is Test {
         (uint256 endTime, uint256 amount) = mafia.getUsersInvest(player, 0);
         assertEq(endTime, block.timestamp + mafia.investTime());
         assertEq(amount, 7 * mafia.feePerEnergy());
-        USDbC.mint(player, 23 * mafia.feePerEnergy());
 
+        // try buy 10000, but buy 23
+        USDbC.mint(player, 23 * mafia.feePerEnergy());
         USDbC.approve(address(mafia), 23 * mafia.feePerEnergy());
         mafia.buyEnergy(10000);
         
         (, energy) = mafia.users(player);
         assertEq(energy, 100);
-        (endTime, amount) = mafia.getUsersInvest(player, 0);
+        (endTime, amount) = mafia.getUsersInvest(player, 1);
         assertEq(endTime, block.timestamp + mafia.investTime());
         assertEq(amount, 23 * mafia.feePerEnergy());
+    }
+
+    function test_returnFunds() public {
+        // Spend energy
+        vm.startPrank(owner);
+        MafiaCaster.Mission memory mission = _getDefaultMission();
+        mission.enable = true;
+        mission.energyConsume = 50;
+        uint256 id = mafia.addMission(mission);
+        vm.startPrank(player);
+        mafia.claimEnergy();
+        mafia.doMission(id);
+        USDbC.mint(player, 25 * mafia.feePerEnergy());
+        USDbC.approve(address(mafia), 25 * mafia.feePerEnergy());
+        
+        mafia.buyEnergy(10);
+        mafia.buyEnergy(15);
+        
+        mafia.returnFunds(0);
+        (, uint256 amount) = mafia.getUsersInvest(player, 0);
+        assertEq(amount, 0);
+        assertEq(USDbC.balanceOf(player), 10 ether);
+        
+        mafia.returnFunds(1);
+        (, amount) = mafia.getUsersInvest(player, 1);
+        assertEq(amount, 0);
+        assertEq(USDbC.balanceOf(player), 25 ether);
+        
     }
 
     // Helpers
