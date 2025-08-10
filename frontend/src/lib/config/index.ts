@@ -9,7 +9,8 @@ export const config = {
   IS_DEV_ENABLED,
   resolvedBaseUrl: IS_DEV_ENABLED ? devBaseUrl : baseSiteUrl,
   extendedMetadata: {
-    description: "MafiaCaster - A fun way of saving money in a game of strategy",
+    description:
+      "MafiaCaster - A fun way of saving money in a game of strategy",
     tags: ["sveltekit", "svelte", "mafiacaster"],
     primaryCategory: "game",
     subtitle: "MafiaCaster MiniApp",

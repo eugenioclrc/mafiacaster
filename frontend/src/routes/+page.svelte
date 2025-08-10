@@ -4,10 +4,9 @@ import gameAbi from '$lib/abi/game.json';
   	import { getConfig } from '$lib/frames/global/farcaster-wallet';
 import { isWalletReady,frameWalletConfig , userWallet} from '$lib/stores/global/main';
   import {waitForTransactionReceipt, writeContract } from "@wagmi/core";
-  import { anvil } from 'viem/chains';
   import { loadUserData } from '$lib/stores/global/main';
-  import { PUBLIC_DEVMODE } from '$env/static/public';
 import { parseEventLogs } from 'viem'
+  import { baseSepolia } from 'viem/chains';
 
 
   $effect(() => {
@@ -18,18 +17,20 @@ import { parseEventLogs } from 'viem'
   let selectedMission = $state(null);
 
  async function doJob() {
+	/*
 	if(PUBLIC_DEVMODE) {
 		// local host and metamask for development
 	await window.ethereum // Or window.ethereum if you don't support EIP-6963.
     .request({
       method: "wallet_switchEthereumChain",
-      params: [{ chainId: '0x7a69' /* anvil.id */ }],
+      params: [{ chainId: '0x7a69' /* anvil.id * / }],
     })
-}
 
+}
+*/
 const hash = await writeContract(getConfig(), {
-  to: '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512',
-    chainId: anvil.id, 
+  to: '0xC9aE8dA750AC66c686a748CBBdECd851abAc9362',
+    chainId: baseSepolia.id, 
 	abi: gameAbi,
 	functionName: 'doMission',
   args: [1n],
@@ -41,7 +42,6 @@ const transactionReceipt = await  waitForTransactionReceipt(getConfig(), {
 
 loadUserData();
 
-  // ✅ Decodificar TODOS los logs que macheen con tu ABI
   const decoded = parseEventLogs({
     abi: gameAbi,
     logs: transactionReceipt.logs,              // los logs crudos del receipt

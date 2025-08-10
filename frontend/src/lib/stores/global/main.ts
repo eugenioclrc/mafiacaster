@@ -22,7 +22,7 @@ export async function loadUserData() {
   let _lastEnergyClaimed = 0n;
 
   [_lastEnergyClaimed, _energy] = await readContract(get(frameWalletConfig), {
-    address: "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+    address: "0xC9aE8dA750AC66c686a748CBBdECd851abAc9362",
     functionName: "users",
     abi: [
       {

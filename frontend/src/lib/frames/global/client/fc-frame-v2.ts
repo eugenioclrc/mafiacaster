@@ -46,8 +46,7 @@ export const generateURLFCFrameEmbed = ({
         // Max 512 characters.
         // Image must be 200x200px and less than 1MB.
         // Example: "https://yoink.party/img/splash.png"
-        splashImageUrl:
-          "https://mafiacaster-frontend.vercel.app/logo.png",
+        splashImageUrl: "https://mafiacaster-frontend.vercel.app/logo.png",
 
         // Hex color code.
         // Example: "#eeeee4"
