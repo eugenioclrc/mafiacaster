@@ -1,5 +1,5 @@
 <script lang="ts">
-	import StatsHead from '../StatsHead.svelte';
+	import StatsHead from './StatsHead.svelte';
 import gameAbi from '$lib/abi/game.json';
   	import { getConfig } from '$lib/frames/global/farcaster-wallet';
 import { isWalletReady,frameWalletConfig , userWallet} from '$lib/stores/global/main';
