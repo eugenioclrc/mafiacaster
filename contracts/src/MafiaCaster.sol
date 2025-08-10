@@ -34,6 +34,8 @@ contract MafiaCaster is Ownable {
         uint256 energy;
         Invest[] invests;
     }
+    
+    event DoMission(uint256 id, bool hasWon);
 
     uint256 constant MAX_ENERGY = 100;
     uint256 constant MAX_ODDS = 1 ether;
@@ -129,8 +131,9 @@ contract MafiaCaster is Ownable {
         }
 
         users[msg.sender].energy -= mission.energyConsume;
-        
-        if (_hasWon(mission.winOdds)) {
+
+        bool hasWon = _hasWon(mission.winOdds);
+        if (hasWon) {
             if (mission.rewAmount != 0) {
                 money.mint(msg.sender, mission.rewAmount);
             }
@@ -138,6 +141,8 @@ contract MafiaCaster is Ownable {
                 items.mintBatch(msg.sender, mission.rewIds1155, mission.rewAmounts1155);
             }
         }
+
+        emit DoMission(id, hasWon);
     }
 
     function claimEnergy() public {
