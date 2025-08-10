@@ -1,121 +1,121 @@
 <script lang="ts">
-	import Header from './Header.svelte';
+	import { getConfig } from '$lib/frames/global/farcaster-wallet';
+	import {
+		watchConnections,
+		getAccount,
+		connect,
+		disconnect,
+		getChainId,
+		signMessage,
+		signTypedData
+	} from '@wagmi/core';
+	import { baseAccount } from 'wagmi/connectors';
 
-	import QuickAuth from '$lib/components/QuickAuth.svelte';
-	import ComposeCastAction from '$lib/components/ComposeCastAction.svelte';
-	import sdk from '@farcaster/miniapp-sdk';
-	import FarcasterWalletConnect from '$lib/components/FarcasterWalletConnect.svelte';
+	import { farcasterMiniApp as miniAppConnector } from '@farcaster/miniapp-wagmi-connector';
+	import { frameWalletConfig, isWalletReady, userWallet } from '$lib/stores/global/main';
+	import { onMount } from 'svelte';
 
-	let token: string | null = $state(null);
-	let isContextOpen = $state(false);
-	let selectedUrl: string = $state('');
-	const toggleContext = () => {
-		isContextOpen = !isContextOpen;
-	};
+	let unwatch: (() => void) | undefined;
 
-	let context: any = $state(null);
-	$effect(() => {
-		if (sdk.context) {
-			sdk.context.then((ctx) => {
-				console.log('ctx', ctx);
-				context = ctx;
+	let chainId: number | null = $state(null);
+
+	onMount(async () => {
+		const config = getConfig();
+		$frameWalletConfig = config;
+
+		if (getAccount($frameWalletConfig)?.address) {
+			$isWalletReady = true;
+			$userWallet = getAccount($frameWalletConfig)?.address || null;
+		} else {
+			unwatch = watchConnections($frameWalletConfig, {
+				onChange() {
+					if (getAccount($frameWalletConfig)?.address) {
+						$isWalletReady = true;
+						$userWallet = getAccount($frameWalletConfig)?.address || null;
+					}
+				}
 			});
 		}
 	});
 
-	let fid: number = $state(16270);
+	onMount(() => {
+		return () => {
+			if (unwatch) unwatch();
+		};
+	});
+	/*
+    $effect(() => {
+        if($frameWalletConfig && $isWalletReady) {
+            chainId = getChainId($frameWalletConfig);
+            $userWallet = getAccount($frameWalletConfig)?.address || null;
+        }
+    });
+    */
+
+	async function doConnect() {
+		const result = await connect(getConfig(), {
+			connector: baseAccount()
+		});
+		console.log(result);
+		chainId = getChainId($frameWalletConfig);
+		$userWallet = getAccount($frameWalletConfig)?.address || null;
+	}
+
+	async function doDisconnect() {
+		try {
+			const result = await disconnect(getConfig());
+			console.log(result);
+		} catch (error) {
+			console.log('disconnect error, seems to be not working');
+			console.error(error);
+		}
+		$userWallet = null;
+	}
+
+	async function sign() {
+		console.log(await signMessage(getConfig(), { message: 'Hello world from Frames v2!' }));
+	}
+
+	function signTyped() {
+		signTypedData(getConfig(), {
+			domain: {
+				name: 'Frames v2 Demo',
+				version: '1',
+				chainId: 8453 // @important hardcoded for now
+			},
+			types: {
+				Message: [{ name: 'content', type: 'string' }]
+			},
+			message: {
+				content: 'Hello world from Frames v2!'
+			},
+			primaryType: 'Message'
+		});
+	}
 </script>
 
-<Header />
+<div class="card bg-base-100 p-4 shadow-md">
+	<h2 class="mb-2 text-lg font-semibold">💳 Wallet Connect</h2>
+	<div class="rounded bg-neutral px-3 py-1 font-mono text-sm text-white">wagmi.connect</div>
 
-<div class="mx-auto max-w-md space-y-6 p-4">
-	<div class="text-center">
-		<h1 class="text-3xl font-bold">🧪 Farcaster MiniApp</h1>
-	</div>
-
-	<div class="collapse-arrow collapse bg-base-200">
-		<input type="checkbox" bind:checked={isContextOpen} />
-		<div class="collapse-title font-medium">Client Context</div>
-		<div class="collapse-content">
-			<pre class="text-xs break-words whitespace-pre-wrap">{JSON.stringify(
-					context,
-					(_, v) => (typeof v === 'bigint' ? v.toString() : v),
-					2
-				)}</pre>
+	{#if $isWalletReady && !$userWallet}
+		<button class="btn btn-primary" onclick={doConnect}>Wallet Connect</button>
+	{:else if $userWallet}
+		<div class="rounded bg-neutral px-3 py-1 font-mono text-sm text-white">
+			Wallet Connected: {$userWallet}
 		</div>
-	</div>
-</div>
-<div class="mx-auto max-w-md p-4">
-	<h1 class="mb-2 text-lg font-semibold">Actions</h1>
-</div>
-<div class="card bg-base-100 p-4 shadow-md">
-	<h2 class="mb-2 text-lg font-semibold">🔑 Quick Auth</h2>
-	<div class="rounded bg-neutral px-3 py-1 font-mono text-sm text-white">sdk.quickAuth()</div>
-	<QuickAuth setToken={(t) => (token = t)} />
-</div>
-
-<ComposeCastAction />
-
-<div class="card bg-base-100 p-4 shadow-md">
-	<h2 class="mb-2 text-lg font-semibold">📝 Cast</h2>
+		<button class="btn btn-primary" onclick={doDisconnect}>Wallet Disconnect</button>
+	{:else}
+		<button class="btn btn-primary" onclick={doConnect}>Wallet Connect</button>
+	{/if}
+	<!-- chain id -->
 	<div class="rounded bg-neutral px-3 py-1 font-mono text-sm text-white">
-		sdk.actions.openUrl( URL )
+		chain id: {chainId}
 	</div>
-	<button
-		class="btn mt-0.5 btn-primary"
-		onclick={() => sdk.actions.openUrl('https://www.youtube.com/watch?v=dQw4w9WgXcQ')}
-		>Open URL</button
+	<button class="btn btn-primary" onclick={sign} disabled={!$isWalletReady || !$userWallet}
+		>Sign</button
 	>
-	<button
-		class="btn mt-0.5 btn-primary"
-		onclick={() => sdk.actions.openUrl('https://warpcast.com/~/compose')}>Open Warpcast URL</button
+	<button class="btn btn-primary" onclick={signTyped} disabled={!$isWalletReady || !$userWallet}
+		>Sign Typed</button
 	>
 </div>
-
-<div class="card bg-base-100 p-4 shadow-md">
-	<h2 class="mb-2 text-lg font-semibold">👤 View Profile</h2>
-	<div class="rounded bg-neutral px-3 py-1 font-mono text-sm text-white">
-		sdk.actions.viewProfile(&#123; fid: FID &#125;)
-	</div>
-	<input type="number" bind:value={fid} class="input-bordered input mt-0.5 w-full max-w-xs" />
-	<button class="btn btn-primary" onclick={() => sdk.actions.viewProfile({ fid: fid })}
-		>View Profile</button
-	>
-</div>
-
-<!-- sdk.actions.addMiniApp -->
-<div class="card bg-base-100 p-4 shadow-md">
-	<h2 class="mb-2 text-lg font-semibold">🔥 Add Mini App</h2>
-	<div class="rounded bg-neutral px-3 py-1 font-mono text-sm text-white">
-		sdk.actions.addMiniApp()
-	</div>
-	<button class="btn btn-primary" onclick={() => sdk.actions.addMiniApp()}>Add Mini App</button>
-</div>
-
-<div class="card bg-base-100 p-4 shadow-md">
-	<h2 class="mb-2 text-lg font-semibold">📝 Cast</h2>
-	<div class="rounded bg-neutral px-3 py-1 font-mono text-sm text-white">sdk.actions.close()</div>
-	<button class="btn btn-primary" onclick={() => sdk.actions.close()}>Close</button>
-</div>
-
-<div class="card bg-base-100 p-4 shadow-md">
-	<h2 class="mb-2 text-lg font-semibold">🔍 Open Mini App URL</h2>
-	<select class="select-bordered select mt-0.5 w-full max-w-xs" bind:value={selectedUrl}>
-		{#each [{ label: 'Bountycaster (Embed)', value: 'https://www.bountycaster.xyz/bounty/0x392626b092e05955c11c41c5df8e2fb8003ece78' }, { label: 'Demo MiniApp', value: 'https://farcaster.xyz/miniapps/AEk2134ULE4Y/sveletekit-starter-mini-app' }, { label: 'Invalid URL', value: 'https://swizec.com/' }] as option}
-			<option value={option.value}>{option.label}</option>
-		{/each}
-	</select>
-	<button
-		class="btn mt-0.5 btn-primary"
-		onclick={async () => {
-			try {
-				await sdk.actions.openMiniApp({ url: selectedUrl });
-			} catch (error) {
-				console.error(error);
-			}
-		}}>Open Mini App</button
-	>
-</div>
-
-<!-- wallet connect-->
-<FarcasterWalletConnect />

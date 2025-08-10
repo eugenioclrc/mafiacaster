@@ -7,3 +7,4 @@
 /out/
 /cache/solidity-files-cache.json
 /cache/
+/frontend/.vercel/
