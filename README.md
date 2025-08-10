@@ -16,12 +16,10 @@
 
 ```solidity
 constructor(
-    IERC20 _USDbC,
     IPool _pool,
     IRewardsController _rewardsController
 )
 ```
-- `_USDbC`: The ERC20 token used for payments and investments.
 - `_pool`: Lending pool contract (e.g., Aave).
 - `_rewardsController`: Rewards controller for claiming protocol rewards.
 
@@ -36,7 +34,7 @@ constructor(
 ### Energy
 
 - `claimEnergy()`: Claim energy based on elapsed time.
-- `buyEnergy(uint256 amount)`: Buy energy with USDbC, which is deposited into the pool.
+- `buyEnergy(uint256 amount)`: Buy energy with ether, which is deposited into the pool.
 
 ### Investments
 

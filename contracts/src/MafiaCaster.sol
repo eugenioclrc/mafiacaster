@@ -3,16 +3,13 @@ pragma solidity ^0.8.13;
 
 import {Ownable} from "openzeppelin-contracts/contracts/access/Ownable.sol";
 
-import {IERC20} from "openzeppelin-contracts/contracts/token/ERC20/IERC20.sol";
-import {SafeERC20} from "openzeppelin-contracts/contracts/token/ERC20/utils/SafeERC20.sol";
+import {WETH9} from "./mocks/WETH9.sol";
 import {IPool} from "./interfaces/IPool.sol";
 import {IRewardsController} from "./interfaces/IRewardsController.sol";
 import {Items} from "./Items.sol";
 import {Money} from "./Money.sol";
 
 contract MafiaCaster is Ownable {
-    using SafeERC20 for IERC20;
-
     struct Mission {
         bool enable;
         uint256 energyConsume;
@@ -41,8 +38,8 @@ contract MafiaCaster is Ownable {
     uint256 constant MAX_ENERGY = 100;
     uint256 constant MAX_ODDS = 1 ether;
 
-    IERC20 public USDbC;
     IPool public pool;
+    WETH9 public weth;
     IRewardsController public rewardsController;
     
     Items public items;
@@ -56,13 +53,13 @@ contract MafiaCaster is Ownable {
 
     mapping(address => User) public users;
 
-    constructor (IERC20 _USDbC, IPool _pool, IRewardsController _rewardsController) Ownable(msg.sender) {
+    constructor (WETH9 _weth, IPool _pool, IRewardsController _rewardsController) Ownable(msg.sender) {
         items = new Items(msg.sender);
         money = new Money(msg.sender);
-        USDbC = _USDbC;
         pool = _pool;
+        weth = _weth;
         rewardsController = _rewardsController;
-        _USDbC.forceApprove(address(_pool), type(uint256).max);
+        _weth.approve(address(_pool), type(uint256).max);
     }
 
     function getMissionReqIds1155(uint256 id) external view returns(uint256[] memory) {
@@ -112,7 +109,7 @@ contract MafiaCaster is Ownable {
 
     function claimProtocolRewards() external onlyOwner {
         address[] memory assets = new address[](1);
-        assets[0] = address(USDbC); 
+        assets[0] = address(weth); 
         rewardsController.claimAllRewardsToSelf(assets);
     }
 
@@ -146,7 +143,7 @@ contract MafiaCaster is Ownable {
     function claimEnergy() public {
         uint256 energy;
         if (users[msg.sender].lastEnergyClaimed == 0) {
-            energy = 100;
+            energy = 20;
         } else {
             energy = (block.timestamp - users[msg.sender].lastEnergyClaimed) / timePerEnergy;
             require(energy != 0, 'Nothing to claim');
@@ -158,22 +155,27 @@ contract MafiaCaster is Ownable {
         users[msg.sender].lastEnergyClaimed = block.timestamp;
     }
 
-    function buyEnergy(uint256 amount) external {
+    function buyEnergy(uint256 amount) external payable {
         require(users[msg.sender].lastEnergyClaimed != 0, 'First claim energy');
         uint256 deltaE = MAX_ENERGY - users[msg.sender].energy; 
         if (amount > deltaE) {
             amount = deltaE;
         }
 
-        uint256 USDbCAmount = amount * feePerEnergy;
-        USDbC.safeTransferFrom(msg.sender, address(this), USDbCAmount);
+        uint256 ethAmount = amount * feePerEnergy;
+
+        weth.deposit{value: ethAmount}();
         users[msg.sender].invests.push(Invest({
             endTime: block.timestamp + investTime,
-            amount: USDbCAmount
+            amount: ethAmount
         }));
         users[msg.sender].energy += amount;
 
-        _supplyAave(USDbCAmount);
+        _supplyAave(ethAmount);
+
+        if (msg.value > ethAmount) {
+            payable(msg.sender).call{value: msg.value - ethAmount}("");
+        }
     }
 
     function returnFunds(uint256 investId) external {
@@ -183,19 +185,19 @@ contract MafiaCaster is Ownable {
 
         _withdrawAave(invest.amount);
 
-        USDbC.safeTransfer(msg.sender, invest.amount);  
+        weth.transfer(msg.sender, invest.amount);  
         users[msg.sender].invests[investId].amount = 0;
     }
 
-    function _supplyAave(uint256 USDbCAmount) internal {
+    function _supplyAave(uint256 ethAmount) internal {
         if (address(pool) != address(0)) {
-            pool.supply(address(USDbC), USDbCAmount, address(this), 0);
+            pool.supply(address(weth), ethAmount, address(this), 0);
         }
     }
 
-    function _withdrawAave(uint256 USDbCAmount) internal {
+    function _withdrawAave(uint256 ethAmount) internal {
         if (address(pool) != address(0)) {
-            pool.withdraw(address(USDbC), USDbCAmount, address(this));
+            pool.withdraw(address(weth), ethAmount, address(this));
         }
     }
 

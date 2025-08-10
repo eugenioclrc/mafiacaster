@@ -3,22 +3,21 @@ pragma solidity ^0.8.13;
 
 import {Script} from "forge-std/Script.sol";
 import {MafiaCaster} from "../src/MafiaCaster.sol";
-import {MockUSDbC} from "../src/mocks/MockUSDbC.sol";
 import {console} from "forge-std/console.sol";
+import {WETH9} from "../src/mocks/WETH9.sol";
+import {IPool} from "../src/interfaces/IPool.sol";
+import {IRewardsController} from "../src/interfaces/IRewardsController.sol";
 
 contract DeployScript is Script {
 	function run() external {
-		// Start broadcasting transactions
 		vm.startBroadcast();
 
-		// Deploy MockUSDbC (mock stablecoin)
-		MockUSDbC usdbc = new MockUSDbC();
+		MafiaCaster mafiaCaster = new MafiaCaster(
+			new WETH9(), 
+			IPool(address(0)), 
+			IRewardsController(address(0))
+		);
 
-		// Deploy MafiaCaster with the address of MockUSDbC
-		MafiaCaster mafiaCaster = new MafiaCaster(usdbc);
-
-		// Log deployed addresses
-		console.log("MockUSDbC deployed at:", address(usdbc));
 		console.log("MafiaCaster deployed at:", address(mafiaCaster));
 
 		vm.stopBroadcast();
