@@ -1,0 +1,25 @@
+
+{
+  "accountAssociation": {
+    "header": "eyJmaWQiOjE2MjcwLCJ0eXBlIjoiYXV0aCIsImtleSI6IjB4MkUwOEUzMTNiMzRGREY0NEUxRGJlOThiZDI2QjZFQzE2MzZlNTc2OSJ9",
+    "payload": "eyJkb21haW4iOiJmYXJjYXN0ZXItbWluaWFwcC1zdmVsdGVraXQtc3RhcnRlci52ZXJjZWwuYXBwIn0",
+    "signature": "k76S7YPP+jn+BeSP228CzSCGs87cxNow361FS/zXxCJsNomEfagFQkuT/s1IT8WMbfEUCdMcsAmFiHMEoFesLRw="
+  },
+  "miniapp": {
+    "version": "1",
+    "name": "SveleteKit starter Mini App",
+    "iconUrl": "https://farcaster-miniapp-sveltekit-starter.vercel.app/favicon.png",
+    "homeUrl": "https://farcaster-miniapp-sveltekit-starter.vercel.app/",
+    "imageUrl": "https://farcaster-miniapp-sveltekit-starter.vercel.app/logo.png",
+    "buttonTitle": "Open App",
+    "splashImageUrl": "https://farcaster-miniapp-sveltekit-starter.vercel.app/logo.png",
+    "splashBackgroundColor": "#35303f",
+    "requiredChains": [
+      "eip155:8453"
+    ],
+    "requiredCapabilities": [
+      "actions.signIn",
+      "wallet.getEthereumProvider"
+    ]
+  }
+} 
