@@ -16,6 +16,7 @@ contract DeployScript is Script {
 		vm.startBroadcast();
 
 		MafiaCaster mafiaCaster = new MafiaCaster(
+			address(0), 
 			new WETH9(), 
 			IPool(address(0)), 
 			IRewardsController(address(0))
