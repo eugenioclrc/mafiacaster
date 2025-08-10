@@ -20,7 +20,7 @@
 		getAccount,
 		connect,
 	} from '@wagmi/core';
-	import { baseAccount, coinbaseWallet } from 'wagmi/connectors';
+	import { baseAccount, coinbaseWallet, metaMask, injected } from 'wagmi/connectors';
 	import { farcasterMiniApp as miniAppConnector } from '@farcaster/miniapp-wagmi-connector';
 
 	const ogImage = `${config.resolvedBaseUrl}/logo.png`;
@@ -94,8 +94,13 @@
 			const result = await connect($frameWalletConfig, { connector: baseAccount() });
 		} else if(connectionType == 'baseCDP') {
 			const result = await connect($frameWalletConfig, { connector: coinbaseWallet() });
+		} else if(connectionType == 'injected') {
+			try {
+				await connect($frameWalletConfig, { connector: injected() });
+			} catch(error) {
+				await connect($frameWalletConfig, { connector: metaMask() });
+			}
 		}
-
 
 		//chainId = getChainId($frameWalletConfig);
 		$userWallet = getAccount($frameWalletConfig)?.address || null;
@@ -144,6 +149,7 @@
 	{:else}
 		<button class="btn btn-primary my-2" onclick={() => doConnect('baseWallet')}>Base Wallet</button>
 		<button class="btn btn-primary my-2" onclick={() => doConnect('baseCDP')}>Base CDP</button>
+		<button class="btn btn-primary my-2" onclick={() => doConnect('injected')}>Metamsk</button>
 	{/if}
 </div>
 

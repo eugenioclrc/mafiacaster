@@ -1,4 +1,3 @@
-
 {
   "accountAssociation": {
     "header": "eyJmaWQiOjE2MjcwLCJ0eXBlIjoiYXV0aCIsImtleSI6IjB4MkUwOEUzMTNiMzRGREY0NEUxRGJlOThiZDI2QjZFQzE2MzZlNTc2OSJ9",
@@ -14,12 +13,7 @@
     "buttonTitle": "Open App",
     "splashImageUrl": "https://farcaster-miniapp-sveltekit-starter.vercel.app/logo.png",
     "splashBackgroundColor": "#35303f",
-    "requiredChains": [
-      "eip155:8453"
-    ],
-    "requiredCapabilities": [
-      "actions.signIn",
-      "wallet.getEthereumProvider"
-    ]
+    "requiredChains": ["eip155:8453"],
+    "requiredCapabilities": ["actions.signIn", "wallet.getEthereumProvider"]
   }
-} 
+}
