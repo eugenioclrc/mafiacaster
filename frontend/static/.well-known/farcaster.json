@@ -1,17 +1,17 @@
 {
   "accountAssociation": {
-    "header": "eyJmaWQiOjE2MjcwLCJ0eXBlIjoiYXV0aCIsImtleSI6IjB4MkUwOEUzMTNiMzRGREY0NEUxRGJlOThiZDI2QjZFQzE2MzZlNTc2OSJ9",
-    "payload": "eyJkb21haW4iOiJmYXJjYXN0ZXItbWluaWFwcC1zdmVsdGVraXQtc3RhcnRlci52ZXJjZWwuYXBwIn0",
-    "signature": "k76S7YPP+jn+BeSP228CzSCGs87cxNow361FS/zXxCJsNomEfagFQkuT/s1IT8WMbfEUCdMcsAmFiHMEoFesLRw="
+    "header": "eyJmaWQiOjE2MjcwLCJ0eXBlIjoiY3VzdG9keSIsImtleSI6IjB4NkE2MTI1QjEzOTZkNWMwRDJENzdGMjJhNzc4NEY4ZEY0MDMxZDdGZiJ9",
+    "payload": "eyJkb21haW4iOiJtYWZpYWNhc3Rlci1mcm9udGVuZC52ZXJjZWwuYXBwIn0",
+    "signature": "MHhiMjRhNjViN2Y1YzhmNmU3OTkyZTcwMzJkMjQ0NTI3YWEyZDRhMDQ4MDNiYzMxMDlmYWRmOWZkOWNlMzdiY2QzMDMxNDA5NTg1MDg3MzUyODI3NWEzMjJiMGUyZDNjYTJjNGU2NWU0NWFlNTk3MzQyMmIzNjgzM2UyOTg3NTA4NTFj"
   },
   "miniapp": {
     "version": "1",
-    "name": "SveleteKit starter Mini App",
-    "iconUrl": "https://farcaster-miniapp-sveltekit-starter.vercel.app/favicon.png",
-    "homeUrl": "https://farcaster-miniapp-sveltekit-starter.vercel.app/",
-    "imageUrl": "https://farcaster-miniapp-sveltekit-starter.vercel.app/logo.png",
-    "buttonTitle": "Open App",
-    "splashImageUrl": "https://farcaster-miniapp-sveltekit-starter.vercel.app/logo.png",
+    "name": "MafiaCaster game Mini App",
+    "iconUrl": "https://mafiacaster-frontend.vercel.app/favicon.png",
+    "homeUrl": "https://mafiacaster-frontend.vercel.app/",
+    "imageUrl": "https://mafiacaster-frontend.vercel.app/logo.png",
+    "buttonTitle": "Join the MafiaCaster",
+    "splashImageUrl": "https://mafiacaster-frontend.vercel.app/logo.png",
     "splashBackgroundColor": "#35303f",
     "requiredChains": ["eip155:8453"],
     "requiredCapabilities": ["actions.signIn", "wallet.getEthereumProvider"]
